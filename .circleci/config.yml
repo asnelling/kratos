@@ -182,18 +182,18 @@ workflows:
               only: /.*/
             branches:
               only: master
-      - sdk/release-openapi:
-          swagpath: spec/api.json
-          requires:
-            - test
-            - test-e2e
-            - sdk/generate-openapi
-            - goreleaser/release
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              ignore: /.*/
+      # - sdk/release-openapi:
+      #     swagpath: spec/api.json
+      #     requires:
+      #       - test
+      #       - test-e2e
+      #       - sdk/generate-openapi
+      #       - goreleaser/release
+      #     filters:
+      #       tags:
+      #         only: /.*/
+      #       branches:
+      #         ignore: /.*/
       - changelog/generate:
           requires:
             - test
@@ -203,49 +203,49 @@ workflows:
               only: /.*/
             branches:
               only: master
-      - goreleaser/release:
-          requires:
-            - test
-            - test-e2e
+      # - goreleaser/release:
+      #     requires:
+      #       - test
+      #       - test-e2e
+      #     filters:
+      #       branches:
+      #         ignore: /.*/
+      #       tags:
+      #         only: /.*/
+      - goreleaser/render-version-schema:
+          schema-path: driver/config/.schema/config.schema.json
           filters:
             branches:
               ignore: /.*/
             tags:
               only: /.*/
-      - goreleaser/render-version-schema:
-          schema-path: driver/config/.schema/config.schema.json
-          requires:
-            - goreleaser/release
-          filters:
-            tags:
-              only: /.*/
-      - goreleaser/newsletter-draft:
-          chimp-list: f605a41b53
-          chimp-segment: 6479477
-          requires:
-            - goreleaser/release
-          filters:
-            tags:
-              only: /.*/
-      - slack/approval-notification:
-          message: Pending approval
-          channel: release-automation
-          requires:
-            - goreleaser/newsletter-draft
-          filters:
-            tags:
-              only: /.*/
-      - newsletter-approval:
-          type: approval
-          requires:
-            - goreleaser/newsletter-draft
-          filters:
-            tags:
-              only: /.*/
-      - goreleaser/newsletter-send:
-          chimp-list: f605a41b53
-          requires:
-            - newsletter-approval
-          filters:
-            tags:
-              only: /.*/
+      # - goreleaser/newsletter-draft:
+      #     chimp-list: f605a41b53
+      #     chimp-segment: 6479477
+      #     requires:
+      #       - goreleaser/release
+      #     filters:
+      #       tags:
+      #         only: /.*/
+      # - slack/approval-notification:
+      #     message: Pending approval
+      #     channel: release-automation
+      #     requires:
+      #       - goreleaser/newsletter-draft
+      #     filters:
+      #       tags:
+      #         only: /.*/
+      # - newsletter-approval:
+      #     type: approval
+      #     requires:
+      #       - goreleaser/newsletter-draft
+      #     filters:
+      #       tags:
+      #         only: /.*/
+      # - goreleaser/newsletter-send:
+      #     chimp-list: f605a41b53
+      #     requires:
+      #       - newsletter-approval
+      #     filters:
+      #       tags:
+      #         only: /.*/
